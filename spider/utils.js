@@ -1,0 +1,46 @@
+const path = require('path')
+const fs = require('fs')
+const request = require('request')
+
+let staticUrl = "localhost:8081"
+
+// 在线图片转为本地图片(传入url和保存的地址（地址直接写相对地址./image/xxx）)
+// 返回本地图片地址
+exports.switchToLocal = async function(target, reaPath){
+    let savePath = await this.checkFileExist(reaPath)
+
+    let temp = target.split('/')
+    let filename = temp[temp.length - 1]
+    request(target).pipe(fs.createWriteStream(path.resolve(savePath, filename)))
+    reaPath = reaPath.replace('../../resource','')
+    return staticUrl + reaPath + '/' + filename
+}
+// 检查是否存在此文件夹
+exports.checkFileExist = async function(reaPath){
+    savePath = path.resolve(__dirname, reaPath)
+    if (!fs.existsSync(savePath)) {
+        await fs.mkdirSync(savePath, { recursive: true });
+
+    }
+    return savePath
+}
+// 将blob文件（图片）写入本地，并返回本地图片地址
+exports.saveToLocal = async function(blobData,reaPath,filename,type){
+    let savePath = await this.checkFileExist(reaPath)
+    let imageUrl = await new Promise((resolve,reject)=> {
+        fs.writeFile(
+            path.resolve(savePath,filename+'.'+type),
+            blobData,
+            'binary',
+            function(err) {
+                if(err) console.error('保存失败');
+                else {
+                    console.log('图片已保存成功');
+                    // console.log(staticUrl + reaPath.replace('../../resource','') + '/' + filename + '.' + type);
+                    resolve(staticUrl + reaPath.replace('../../resource','') + '/' + filename + '.' + type)
+                }
+            }
+        )
+    })
+    return imageUrl
+}

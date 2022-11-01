@@ -1,0 +1,98 @@
+[
+    {
+        "comicId": "/73bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191206092901_180x240_25.jpg",
+        "title": "鬼滅之刃",
+        "state": "完結",
+        "chapterId": "/m147828/",
+        "chapterTitle": "特別短篇"
+    },
+    {
+        "comicId": "/38bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191206093227_180x240_21.jpg",
+        "title": "一拳超人",
+        "state": "最新",
+        "chapterId": "/m254285/",
+        "chapterTitle": "一拳超人 第217話"
+    },
+    {
+        "comicId": "/64bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191203100424_180x240_26.jpg",
+        "title": "炎炎之消防隊",
+        "state": "最新",
+        "chapterId": "/m217708/",
+        "chapterTitle": "炎炎之消防隊 第304話"
+    },
+    {
+        "comicId": "/54bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191203093051_180x240_19.jpg",
+        "title": "拳愿阿修羅",
+        "state": "完結",
+        "chapterId": "/m102414/",
+        "chapterTitle": "附錄01"
+    },
+    {
+        "comicId": "/99bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191203133712_180x240_20.jpg",
+        "title": "擅長捉弄人的(原)高木同學",
+        "state": "最新",
+        "chapterId": "/m213619/",
+        "chapterTitle": "擅長捉弄人的(原)高木同學 第213話"
+    },
+    {
+        "comicId": "/1bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20200101121446_180x240_22.jpg",
+        "title": "死神",
+        "state": "完結",
+        "chapterId": "/m192457/",
+        "chapterTitle": "20周年"
+    },
+    {
+        "comicId": "/91bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191203131035_180x240_20.jpg",
+        "title": "五等分的花嫁",
+        "state": "最新",
+        "chapterId": "/m107322/",
+        "chapterTitle": "五等分的花嫁 第122話"
+    },
+    {
+        "comicId": "/60bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191203095013_180x240_19.jpg",
+        "title": "輝夜大小姐想讓我告白 ~天才們的戀愛頭腦戰~",
+        "state": "最新",
+        "chapterId": "/m255641/",
+        "chapterTitle": "周刊271 最終話"
+    },
+    {
+        "comicId": "/72bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191220112052_180x240_23.jpg",
+        "title": "平凡職業成就世界最強",
+        "state": "最新",
+        "chapterId": "/m251763/",
+        "chapterTitle": "平凡職業成就世界最強 第63話"
+    },
+    {
+        "comicId": "/18bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191202144847_180x240_13.jpg",
+        "title": "美食的俘虜",
+        "state": "完結",
+        "chapterId": "/m4131/",
+        "chapterTitle": "美食的俘虜 第396話"
+    },
+    {
+        "comicId": "/65bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191203100626_180x240_20.jpg",
+        "title": "古見同學有交流障礙癥",
+        "state": "最新",
+        "chapterId": "/m212569/",
+        "chapterTitle": "古見同學有交流障礙癥 第336話"
+    },
+    {
+        "comicId": "/83bz/",
+        "imageUrl": "localhost:8081/image/labelPage/20191203105842_180x240_27.jpg",
+        "title": "約定的夢幻島",
+        "state": "完結",
+        "chapterId": "/m157081/",
+        "chapterTitle": "約定的夢幻島 第185話"
+    }
+]
