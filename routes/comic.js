@@ -13,6 +13,7 @@ router.get('/home',async (req,res,next)=> {
 router.post('/detail',async (req,res,next)=> {
     let { comicId } = req.body
     let list = await getDetailPageList(comicId)
+    // list = JSON.parse(list)
     console.log('/comic/detail post');
     res.json(new SuccessModel(list))
 })

@@ -18,6 +18,7 @@ exports.getIndexPageList = async function(html) {
         let hotRecommend = []
         let rank = []
         let editRecommend = []
+        let rankSpeed = []
         let category = []
 
         // banner模块
@@ -102,6 +103,32 @@ exports.getIndexPageList = async function(html) {
 
         }
 
+        // 上升最快模块
+        let rankList = $('.carousel-right-list').find('.carousel-right-item')
+        for(let i=0;i < rankList.length;i++) {
+            let cur = rankList.eq(i)
+            let imageUrl = cur.find('img').attr('src')
+            imageUrl = await api.switchToLocal(imageUrl,'../../resource/image/indexPage/speedRank')
+            let comicId = cur.find('.carousel-right-item-title>a').attr('href')
+            let title = cur.find('.carousel-right-item-title>a').text()
+            let author = cur.find('.carousel-right-item-subtitle').text()
+            let subTitle = []
+            let subTitleList = cur.find('.carousel-right-item-tag > span')
+            for(let i=0;i<subTitleList.length;i++) {
+                let cur = subTitleList.eq(i)
+                subTitle.push(cur.text())
+            }
+            let content = cur.find('.carousel-right-item-content').text()
+            rankSpeed.push({
+                imageUrl,
+                comicId,
+                title,
+                author,
+                subTitle,
+                content
+            })
+        }
+
         // 热门分类
         let categoryTitle = $('div[id=hotCatgoryId]').find('.list-con-title-class').find('a')
         for (let i = 0; i < categoryTitle.length; i++) {
@@ -138,7 +165,8 @@ exports.getIndexPageList = async function(html) {
             hotRecommend,
             rank,
             editRecommend,
-            category
+            category,
+            rankSpeed
         }
         // console.log(mangaList);
         // fs.writeFile(path.resolve(__dirname,'./htmlStore/indexPage/IndexPagedata.json'),JSON.stringify(mangaList),err=>{})
@@ -149,10 +177,12 @@ exports.getIndexPageList = async function(html) {
 exports.getDetailPageList = async function(html,comicId) {
     if (html) {
         // api.checkFileExist('./htmlStore/detailPage')
-        // fs.writeFile(path.resolve(__dirname,'./htmlStore/detailPage/detailPage.html'), html, err => { })
+        fs.writeFile(path.resolve(__dirname,'./htmlStore/detailPage/detailPage.html'), html, err => { })
         let $ = cheerio.load(html)
         let detailPageList = {}
 
+        let notFound = $('.img-404').attr('src')
+        if(notFound) return {code:404,message:'资源不存在'}
         // 作品信息
         
         let coverUrl = $('.detail-info-1').find('.detail-info-cover').attr('src')
@@ -166,9 +196,9 @@ exports.getDetailPageList = async function(html,comicId) {
             label.push(span.eq(i).text())
         }
         let updateTime = $('.detail-list-form-title').text().replace(/\s*/g,"")
-
+        let content = $('.detail-info-content').text()
         // 章节
-        let chpaterList = []
+        let chapterList = []
         let chapters = $('.detail-list-form-con').find('.detail-list-form-item')
         for (let i = 0; i < chapters.length; i++) {
             let obj = {}
@@ -179,17 +209,19 @@ exports.getDetailPageList = async function(html,comicId) {
                 chapterTitle,
                 chapterId
             }
-            chpaterList.push(obj)
+            chapterList.push(obj)
         }
 
 
         detailPageList = {
             comicName,
             author,
+            coverUrl,
             state,
             label,
+            content,
             updateTime,
-            chpaterList,
+            chapterList,
         }
         // fs.writeFile(path.resolve(__dirname,'./htmlStore/detailPage/detailPage.json'),JSON.stringify(detailPageList),err=>{})
         return detailPageList
@@ -239,7 +271,7 @@ exports.getComicBookList = async function(html,url,comicId,comicChapterId,MANGAB
         })
     })
     // fs.writeFile(path.resolve(__dirname,'./htmlStore/comicPage/comicBook.json'),JSON.stringify(imageUrl),err=>{})
-    return imageUrl
+    return {imageUrl}
 }
 // 获取搜索页
 exports.getSearchPageList = async function(html) {

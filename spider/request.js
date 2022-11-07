@@ -46,13 +46,18 @@ exports.getDetailPageList = async function(comicId){
                     html+=res
                 })
                 res.on('end',async function(res){
-                    let detailPageList = await getData.getDetailPageList(html,comicId.slice(1,6))
+                    let detailPageList = await getData.getDetailPageList(html,comicId.replace(/\/*\//g,''))
                     resolve(detailPageList)
                 })
             }
         )
     })   
-    
+    // return await new Promise((resolve,reject)=> {
+    //     fs.readFile(path.resolve(__dirname,'./htmlStore/detailPage/detailPage.json'),'utf8',(err,data)=> {
+    //         if(err) console.error(err);
+    //         resolve(data)
+    //     })
+    // })
 }
 
 // 请求漫画页（传入漫画的唯一标识comidId,章节的唯一标识href以及页数page）
@@ -66,7 +71,7 @@ exports.getComic = async function(comicId,chapterId,page){
                     html += res
                 })
                 res.on('end', async function (res) {
-                    let comicBookData = await getData.getComicBookList(html,baseUrl+chapterId.slice(1),comicId.slice(1,6),chapterId.slice(1,7),page)
+                    let comicBookData = await getData.getComicBookList(html,baseUrl+chapterId.slice(1),comicId.replace(/\/*\//g,''),chapterId.replace(/\/*\//g,''),page)
                     resolve(comicBookData)
                 })
             }
