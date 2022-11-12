@@ -1,8 +1,9 @@
+
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
-const getData = require('./search.js')
-const {TYPE_MAP,STATE_MAP,SORT_MAP,labels} = require('./htmlStore/labelPage/labelsMap')
+const getData = require('./spider/search.js')
+const {TYPE_MAP,STATE_MAP,SORT_MAP,labels} = require('./spider/htmlStore/labelPage/labelsMap')
 
 const baseUrl = "http://www.mangabz.com/"
 const labelBase = 'manga-list'
@@ -129,21 +130,67 @@ exports.getLabels = function() {
     return labels
 }
 
-// 请求漫画章节列表（在漫画页请求）
-exports.getChapterList = async function(comicId){
-    return await new Promise((resolve,reject)=> {
-        http.get(
-            baseUrl+comicId.slice(1),
-            function(res){
-                let html = ''
-                res.on('data',function(res){
-                    html+=res
-                })
-                res.on('end',async function(res){
-                    let chapterList = await getData.getComicChapterList(html,comicId.replace(/\/*\//g,''))
-                    resolve(chapterList)
-                })
-            }
-        )
-    })   
+
+// 爬取所有封面脚本
+
+
+// let p1 = new Promise((resolve,reject)=>{
+//     setTimeout(()=> {
+//         resolve(1)
+//     },1000)
+// })
+// let p2 = new Promise((resolve,reject)=>{
+//     setTimeout(()=> {
+//         resolve(2)
+//     },500)
+// })
+// Promise.race([p1,p2]).then(res=> {
+//     console.log(res);
+// })
+
+async function a() {
+    let temp = async function(type='全部',state='全部',sort='人气',page=1) {
+        let url = `${baseUrl}${labelBase}-${TYPE_MAP.get(type)}-${STATE_MAP.get(state)}-${SORT_MAP.get(sort)}-p${page}/`
+        return new Promise((resolve,reject)=> {
+            let requestPromise = new Promise((resolve,reject)=> {
+                http.get(
+                    url,
+                    function(res) {
+                        let html = ''
+                        res.on('data',function(res) {
+                            html+=res
+                        })
+                        res.on('end', async function(res) {
+                            let searchPageList = await getData.getLabelPageList(html)
+                            resolve(searchPageList)
+                        })
+                    }
+                )
+            })
+            let timeoutPromise = new Promise((resolve,reject)=>{
+                setTimeout(()=> {
+                    resolve(-1)
+                },20000)
+            })
+            Promise.race([requestPromise,timeoutPromise]).then(res=> {
+                if(res==-1) {
+                    resolve(504)
+                }else {
+                    resolve(res)
+                }
+            })
+        })
+        
+    }
+    for(let page = 871;page<=1353;page++) {
+        try {
+            console.log('page',page);
+            let res = await temp('全部','全部','人气',page)
+            console.log(res);
+            if(res==504) page--
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
+a()

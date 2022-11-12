@@ -26,7 +26,7 @@ exports.getIndexPageList = async function(html) {
         for (let i = 0; i < $as.length; i++) {
             let src = $as.eq(i).find('img').attr('src')
             let comicId = $as.eq(i).attr('href') // 资源唯一标识
-            src = await api.switchToLocal(src, '../../resource/image/indexPage/banner')
+            src = await api.switchToLocal(src, '../../resource/image/cover')
             banner.push({
                 src,
                 comicId
@@ -39,7 +39,7 @@ exports.getIndexPageList = async function(html) {
             let cur = renqiList.eq(i)
             let comicId = cur.find('a').attr('href')
             let imageUrl = cur.find('img').attr('src')
-            imageUrl = await api.switchToLocal(imageUrl, '../../resource/image/indexPage/hotRecommend')
+            imageUrl = await api.switchToLocal(imageUrl, '../../resource/image/cover')
             let title = cur.find('.index-manga-item-title').find('a').text()
             let subTitle = cur.find('.index-manga-item-subtitle').find('span').text()
             obj = {
@@ -58,7 +58,7 @@ exports.getIndexPageList = async function(html) {
             let cur = reduList.eq(i)
             let comicId = cur.find('a').attr('href')
             let imageUrl = cur.find('img').attr('src')
-            imageUrl = await api.switchToLocal(imageUrl, '../../resource/image/indexPage/rank')
+            imageUrl = await api.switchToLocal(imageUrl, '../../resource/image/cover')
             let title = cur.find('.rank-item-title').find('a').text()
             let label = []
             let labels = cur.find('.rank-item-right').find('span')
@@ -84,7 +84,7 @@ exports.getIndexPageList = async function(html) {
                 let obj = {}
                 let comicId = cur.eq(i).find('a').attr('href')
                 let imageUrl = cur.eq(i).find('a').find('img').attr('src')
-                imageUrl = await api.switchToLocal(imageUrl, '../../resource/image/indexPage/editRecommend')
+                imageUrl = await api.switchToLocal(imageUrl, '../../resource/image/cover')
                 let title = cur.eq(i).find('.index-manga-item-title').find('a').text()
                 let label = []
                 let labels = cur.eq(i).find('.index-manga-item-subtitle').find('span')
@@ -108,7 +108,7 @@ exports.getIndexPageList = async function(html) {
         for(let i=0;i < rankList.length;i++) {
             let cur = rankList.eq(i)
             let imageUrl = cur.find('img').attr('src')
-            imageUrl = await api.switchToLocal(imageUrl,'../../resource/image/indexPage/speedRank')
+            imageUrl = await api.switchToLocal(imageUrl,'../../resource/image/cover')
             let comicId = cur.find('.carousel-right-item-title>a').attr('href')
             let title = cur.find('.carousel-right-item-title>a').text()
             let author = cur.find('.carousel-right-item-subtitle').text()
@@ -139,7 +139,7 @@ exports.getIndexPageList = async function(html) {
             for (let j = 0; j < list.length; j++) {
                 let comicId = list.eq(j).find('a').attr('href')
                 let imageUrl = list.eq(j).find('a').find('img').attr('src')
-                imageUrl = await api.switchToLocal(imageUrl, '../../resource/image/indexPage/category')
+                imageUrl = await api.switchToLocal(imageUrl, '../../resource/image/cover')
                 let title = list.eq(j).find('.index-manga-item-title').text()
                 let subTitle = []
                 let subTitleList = list.eq(j).find('.index-manga-item-subtitle').find('span')
@@ -203,11 +203,16 @@ exports.getDetailPageList = async function(html,comicId) {
         for (let i = 0; i < chapters.length; i++) {
             let obj = {}
             let cur = chapters.eq(i)
+            // console.log(cur.find('span').text());
             let chapterTitle = cur.text().replace(/\s*/g,"")
+            let chapterTotal = cur.find('span').text()
+                    .match(/[�+\(|（].*[\)|）|�+]$/g)[0]    
+                    .match(/[0-9]+/g)[0]
             let chapterId = cur.attr('href')
             obj = {
                 chapterTitle,
-                chapterId
+                chapterId,
+                chapterTotal
             }
             chapterList.push(obj)
         }
@@ -254,7 +259,7 @@ exports.getComicBookList = async function(html,url,comicId,comicChapterId,MANGAB
         .end(async (err,res)=> {
             if(err) {
                 console.error('图片获取失败，请重新刷新');
-                reject()
+                reject('error')
                 return
             }
             // 这里执行eval函数，结果会保存到d变量里，所以直接用d变量接受图片地址
@@ -281,13 +286,14 @@ exports.getSearchPageList = async function(html) {
     let searchDataList = []
     let $ = cheerio.load(html)
     let searchTitle = $('.result-title').text().trim()
-    let total = Math.ceil(searchTitle.match(/\d+/))
+        // let total = Math.ceil(searchTitle.match(/\d+/))
+    let total = parseInt(searchTitle.match(/[�+\(|（].*[\)|）|�+]$/g)[0].match(/[0-9]+/g)[0]);
     let searchList = $('.mh-list').find('.mh-item')
     for(let i=0;i<searchList.length;i++) {
         let cur = searchList.eq(i)
-        let comicId = $('.mh-item>a').attr('href')
+        let comicId = $('.mh-item>a').eq(i).attr('href')
         let imageUrl = cur.find('img').attr('src')
-        imageUrl = await api.switchToLocal(imageUrl,'../../resource/image/searchPage')
+        imageUrl = await api.switchToLocal(imageUrl,'../../resource/image/cover')
         let title = cur.find('.mh-item-detali .title > a').attr('title')
         let state = cur.find('.chapter > span').text()
         let chapterId = cur.find('.chapter > a').attr('href')
@@ -323,7 +329,7 @@ exports.getLabelPageList = async function (html) {
     for(let i=0;i<labelList.length;i++) {
         let cur = labelList.eq(i)
         let imageUrl = cur.find('img').attr('src')
-        imageUrl = await api.switchToLocal(imageUrl,'../../resource/image/labelPage')
+        imageUrl = await api.switchToLocal(imageUrl,'../../resource/image/cover')
         let comicId = $('.mh-list').find('.mh-item > a').eq(i).attr('href')
         let title = cur.find('.title > a').attr('title')
         let state = cur.find('.chapter span').text()
@@ -341,7 +347,42 @@ exports.getLabelPageList = async function (html) {
     // fs.writeFile(path.resolve(__dirname,'./htmlStore/labelPage/labelPage.json'),JSON.stringify(labelDataList),err=>{})
     return labelDataList
 }
+exports.getComicChapterList = async function (html ){
+    if (html) {
 
+        let $ = cheerio.load(html)
+        let detailPageList = {}
+
+        let notFound = $('.img-404').attr('src')
+        if(notFound) return {code:404,message:'资源不存在'}
+
+        // 章节
+        let chapterList = []
+        let chapters = $('.detail-list-form-con').find('.detail-list-form-item')
+        for (let i = 0; i < chapters.length; i++) {
+            let obj = {}
+            let cur = chapters.eq(i)
+            let chapterTitle = cur.text().replace(/\s*/g,"")
+            let chapterTotal = cur.find('span').text()
+                    .match(/[�+\(|（].*[\)|）|�+]$/g)[0]
+                    .match(/[0-9]+/g)[0]
+            let chapterId = cur.attr('href')
+            obj = {
+                chapterTitle,
+                chapterId,
+                chapterTotal
+            }
+            chapterList.push(obj)
+        }
+
+
+        detailPageList = {
+            chapterList,
+        }
+        // fs.writeFile(path.resolve(__dirname,'./htmlStore/detailPage/detailPage.json'),JSON.stringify(detailPageList),err=>{})
+        return detailPageList
+    }
+}
 //------------------------------------------------
 
 
