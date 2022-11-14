@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { SuccessModel } = require('../model/resModel')
 
 const secretKey = "secretKey";
 
@@ -17,7 +18,7 @@ const verifyToken = function (req, res, next) {
   jwt.verify(token, secretKey, function (err, decoded) {
     if (err) {
       console.log("verify error", err);
-      return res.json({ code: "404", msg: "token无效" });
+      return res.json(new SuccessModel({ code: "404", msg: "token无效" }));
     }
     console.log("verify decoded", decoded);
     next();

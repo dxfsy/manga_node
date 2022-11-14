@@ -347,7 +347,7 @@ exports.getLabelPageList = async function (html) {
     // fs.writeFile(path.resolve(__dirname,'./htmlStore/labelPage/labelPage.json'),JSON.stringify(labelDataList),err=>{})
     return labelDataList
 }
-exports.getComicChapterList = async function (html ){
+exports.getComicChapterList = async function (html){
     if (html) {
 
         let $ = cheerio.load(html)
@@ -383,6 +383,7 @@ exports.getComicChapterList = async function (html ){
         return detailPageList
     }
 }
+
 //------------------------------------------------
 
 

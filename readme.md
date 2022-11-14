@@ -5,3 +5,6 @@
 
 
 ## 获取漫画页面的接口一定要发送 漫画href和第几话 漫画href和第几话 漫画href和第几话
+
+## 漫画管理表字段
+usernamne，comicId，comicTitle，chapterHistoryId(chapterId)，chapterHistoryName(chapterName)，chapterLastestName，chapterLastestId，isCollect（0||1）
