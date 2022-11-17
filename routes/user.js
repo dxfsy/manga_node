@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { register, login, updatePassword, updateHistory, updateCollect, getComicHistory,getComicCollect } = require('../controller/user')
+const { register, login, updatePassword, updateHistory, updateCollect, getComicHistory,getComicCollect,getHistoryList,getCollectList,getCollectSearchList,removeCollectList,getHistorySearchList,removeHistoryList } = require('../controller/user')
 const { generateToken, verifyToken } = require('../utils/authorization')
 const { SuccessModel } = require('../model/resModel')
 
@@ -127,11 +127,12 @@ router.get('/isLogin', verifyToken, (req, res, next) => {
     }))
 })
 
-router.post('/history', async (req, res, next) => {
+router.post('/history', verifyToken, async (req, res, next) => {
     console.log('/user/history post');
     let {
         username,
         comicId,
+        comicCover,
         comicTitle,
         chapterHistoryId,
         chapterHistoryName,
@@ -142,6 +143,7 @@ router.post('/history', async (req, res, next) => {
     } = req.body
     let result = await updateHistory(username,
         comicId,
+        comicCover,
         comicTitle,
         chapterHistoryId,
         chapterHistoryName,
@@ -149,12 +151,13 @@ router.post('/history', async (req, res, next) => {
         chapterLastestId,
         chapterLastestName,
         chapterLastestTotal)
+        console.log(result);
     if (result == 1) {
         res.json(new SuccessModel({
             code: 200,
             message: '历史更新成功'
         }))
-    } else if (result == 2) {
+    } else if (result == -1) {
         res.json(new SuccessModel({
             code: -1,
             message: '历史更新失败'
@@ -162,11 +165,12 @@ router.post('/history', async (req, res, next) => {
     }
 })
 
-router.post('/collect', async (req, res, next) => {
+router.post('/collect', verifyToken, async (req, res, next) => {
     console.log('/user/collect post');
     let {
         username,
         comicId,
+        comicCover,
         comicTitle,
         chapterLastestId,
         chapterLastestTitle,
@@ -177,7 +181,7 @@ router.post('/collect', async (req, res, next) => {
         isCollect = 0
     }
     console.log(req.body);
-    let result = await updateCollect(username, comicId, comicTitle, chapterLastestId, chapterLastestTitle, chapterLastestTotal, isCollect)
+    let result = await updateCollect(username, comicId, comicCover, comicTitle, chapterLastestId, chapterLastestTitle, chapterLastestTotal, isCollect)
     if (result == 1) {
         res.json(new SuccessModel({
             code: 200,
@@ -191,7 +195,7 @@ router.post('/collect', async (req, res, next) => {
     }
 })
 
-router.post('/comicHistory', async (req, res, next) => {
+router.post('/comicHistory', verifyToken, async (req, res, next) => {
     let { username, comicId } = req.body
     console.log('/user/comicHistory get');
     let result = await getComicHistory(username, comicId)
@@ -208,18 +212,114 @@ router.post('/comicHistory', async (req, res, next) => {
     }
 })
 
-router.post('/comicCollect',async(req,res,next)=> {
+router.post('/comicCollect', verifyToken, async(req,res,next)=> {
     let {username,comicId} = req.body
     let result = await getComicCollect(username,comicId)
     if(result!==-1) {
         res.json(new SuccessModel({
             code:200,
-            isCollect: result
+            ...result
         }))
     }else {
         res.json(new SuccessModel({
             code:-1,
             isCollect:0
+        }))
+    }
+})
+
+router.post('/historyList', verifyToken, async(req,res,next)=> {
+    let {username} = req.body
+    let result = await getHistoryList(username)
+    if(result == -1) {
+        res.json(new SuccessModel({
+            code:200,
+            message:'浏览历史为空'
+        }))
+    }else {
+        res.json(new SuccessModel({
+            code:200,
+            list:result
+        }))
+    }
+})
+
+router.post('/collectList', verifyToken, async(req,res,next)=> {
+    let {username} = req.body
+    let result = await getCollectList(username)
+    if(result!==-1) {
+        res.json(new SuccessModel({
+            code:200,
+            list: result
+        }))
+    }else {
+        res.json(new SuccessModel({
+            code:200,
+            message:'用户暂未收藏漫画'
+        }))
+    }
+})
+
+router.post('/historySearch', verifyToken, async(req,res,next)=> {
+    let {username,key} = req.body
+    let result = await getHistorySearchList(username,key)
+    if(result == -1) {
+        res.json(new SuccessModel({
+            code: 200,
+            message:'用户浏览历史中未找到该漫画'
+        }))
+    }else {
+        res.json(new SuccessModel({
+            code:200,
+            list: result
+        }))
+    }
+})
+
+router.post('/collectSearch', verifyToken, async(req,res,next)=> {
+    let {username,key} = req.body
+    let result = await getCollectSearchList(username,key)
+    if(result!==-1) {
+        res.json(new SuccessModel({
+            code:200,
+            list: result
+        }))
+    }else {
+        res.json(new SuccessModel({
+            code:200,
+            message:'用户收藏夹中未找到该漫画'
+        }))
+    }
+})
+
+router.post('/removeHistory', verifyToken, async(req,res,next)=> {
+    let {username,list} = req.body
+    let result = await removeHistoryList(username,list)
+    if(result == -1){
+        res.json(new SuccessModel({
+            code:-1,
+            message:'移除失败，请重试'
+        }))
+    }else {
+        res.json(new SuccessModel({
+            code:200,
+            message:'移除成功'
+        }))
+    }
+})
+
+router.post('/removeCollect' , verifyToken, async(req,res,next)=> {
+    let { username,list } = req.body
+    let result = await removeCollectList(username,list)
+    if(result == -1) {
+        res.json(new SuccessModel({
+            code: -1,
+            message:'移除失败，请重试'
+        }))
+    }else {
+        res.json(new SuccessModel({
+            code:200,
+            message:'移除成功'
         }))
     }
 })
