@@ -128,7 +128,7 @@ const getComicCollect = async(username,comicId)=> {
 
 const getHistoryList = async(username)=> {
     let res = await exec(
-        `select * from comicInfo where username = '${username}' and isHistory='${1}'`
+        `select * from comicInfo where username = '${username}' and isHistory='${1}' order by create_time desc`
     )
     if(res.length!==0) {
         return res
@@ -139,7 +139,7 @@ const getHistoryList = async(username)=> {
 
 const getCollectList = async(username)=> {
     let res = await exec(
-        `select * from comicInfo where username = '${username}' and isCollect = 1`
+        `select * from comicInfo where username = '${username}' and isCollect = 1 order by create_time desc`
     )
     if(res.length!==0) {
         return res

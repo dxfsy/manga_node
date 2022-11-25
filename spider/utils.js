@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const request = require('request')
 
-let staticUrl = "http://localhost:8081"
+let staticUrl = "http://192.168.0.21:8081"
 
 // 在线图片转为本地图片(传入url和保存的地址（地址直接写相对地址./image/xxx）)
 // 返回本地图片地址
