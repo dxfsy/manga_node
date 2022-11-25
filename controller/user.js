@@ -150,7 +150,7 @@ const getCollectList = async(username)=> {
 
 const getCollectSearchList = async (username,key)=> {
     let res = await exec(
-        `select * from comicInfo where username = '${username}' and comicTitle like '%${key}%' and isCollect = '${1}'`
+        `select * from comicInfo where username = '${username}' and comicTitle like '%${key}%' and isCollect = '${1}' order by create_time desc`
     )
     if(res.length!==0) {
         return res
@@ -161,7 +161,7 @@ const getCollectSearchList = async (username,key)=> {
 
 const getHistorySearchList = async (username,key)=> {
     let res = await exec(
-        `select * from comicInfo where username = '${username}' and comicTitle like '%${key}%' and isHistory='${1}'`
+        `select * from comicInfo where username = '${username}' and comicTitle like '%${key}%' and isHistory='${1}' order by create_time desc`
     )
     if(res.length!==0) {
         return res
