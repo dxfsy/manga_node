@@ -168,7 +168,7 @@ const getHistorySearchList = async (username,key)=> {
     }else {
         return -1
     }
-}
+}   
 
 const removeCollectList = async(username,list)=> {
     let sql = `update comicInfo set isCollect='${0}' where username='${username}' and (comicId = '${list[0]}'`
@@ -176,6 +176,7 @@ const removeCollectList = async(username,list)=> {
         sql += ` or comicId = '${list[i]}'`
     }
     sql += ')'
+    // console.log(sql);
     let res = await exec(sql)
     if (res.affectedRows > 0) {
         return 1 // 更新成功

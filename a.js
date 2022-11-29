@@ -182,7 +182,7 @@ async function a() {
         })
         
     }
-    for(let page = 871;page<=1353;page++) {
+    for(let page = 871;page<=1354;page++) {
         try {
             console.log('page',page);
             let res = await temp('全部','全部','人气',page)

@@ -26,6 +26,7 @@ router.get('/labels', async (req, res, next) => {
 
 router.get('/search', async (req, res, next) => {
     let { title, page } = req.query
+    if(title == '') res.json(new SuccessModel({message:'输入不能为空'}))
     let list = await getSearchList(title, page)
     console.log('/comic/search get');
     res.json(new SuccessModel(list))

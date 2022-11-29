@@ -2,6 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const cheerio = require('cheerio')
 const superagent = require('superagent')
+const superagentProxy = require('superagent-proxy');
+superagentProxy(superagent)
 const api = require('./utils.js')
 
 let url = "http://www.mangabz.com/"
@@ -233,12 +235,11 @@ exports.getDetailPageList = async function(html,comicId) {
     }
 }
 // 获取漫画（根据唯一标识）
-exports.getComicBookList = async function(html,url,comicId,comicChapterId,MANGABZ_PAGE) {
+exports.getComicBookList = async function(html,url,comicId,comicChapterId,MANGABZ_PAGE,proxyIp) {
     // api.checkFileExist('./htmlStore/comicPage')
     // fs.writeFile(path.resolve(__dirname,'./htmlStore/comicPage/comicBook.html'), html, err => { })
 
-
-
+    console.log('comic',proxyIp);
     // 整理参数
     let params = execParam(html)
 
@@ -251,13 +252,14 @@ exports.getComicBookList = async function(html,url,comicId,comicChapterId,MANGAB
         _dt: params.MANGABZ_VIEWSIGN_DT.split(' ').join('+'),
         _sign: params.MANGABZ_VIEWSIGN,
     }
-
     let imageUrl = await new Promise((resolve,reject)=> {
         superagent
         .get(url + 'chapterimage.ashx?' + trans(prs))
         .set('Referer', url)
+        .proxy('http://' + '55081235:9E194826D379@' + proxyIp)
         .end(async (err,res)=> {
             if(err) {
+                console.log(err);
                 console.error('图片获取失败，请重新刷新');
                 reject('error')
                 return
@@ -268,6 +270,7 @@ exports.getComicBookList = async function(html,url,comicId,comicChapterId,MANGAB
             superagent
                 .get(imageRequestUrl)
                 .set('Referer',url)
+                .proxy('http://' + '55081235:9E194826D379@' + proxyIp)
                 .end(async (err,res)=> {
                     let imageUrl = await api.saveToLocal(res.body,`../../resource/image/detailPage/${comicId}/${comicChapterId}`,MANGABZ_PAGE,'jpg')
                     resolve(imageUrl)

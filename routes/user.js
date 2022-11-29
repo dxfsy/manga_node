@@ -122,6 +122,7 @@ router.post('/updatePassword', async (req, res, next) => {
 })
 
 router.get('/isLogin', verifyToken, (req, res, next) => {
+    console.log('/user/isLogin get');
     res.json(new SuccessModel({
         code: 200
     }))
@@ -196,8 +197,8 @@ router.post('/collect', verifyToken, async (req, res, next) => {
 })
 
 router.post('/comicHistory', verifyToken, async (req, res, next) => {
+    console.log('/user/comicHistory post');
     let { username, comicId } = req.body
-    console.log('/user/comicHistory get');
     let result = await getComicHistory(username, comicId)
     if(result !== -1) {
         res.json(new SuccessModel({
@@ -213,6 +214,7 @@ router.post('/comicHistory', verifyToken, async (req, res, next) => {
 })
 
 router.post('/comicCollect', verifyToken, async(req,res,next)=> {
+    console.log('/user/comicCollect post');
     let {username,comicId} = req.body
     let result = await getComicCollect(username,comicId)
     if(result!==-1) {
@@ -229,6 +231,7 @@ router.post('/comicCollect', verifyToken, async(req,res,next)=> {
 })
 
 router.post('/historyList', verifyToken, async(req,res,next)=> {
+    console.log('/user/historyList post');
     let {username} = req.body
     let result = await getHistoryList(username)
     if(result == -1) {
@@ -245,6 +248,7 @@ router.post('/historyList', verifyToken, async(req,res,next)=> {
 })
 
 router.post('/collectList', verifyToken, async(req,res,next)=> {
+    console.log('/user/collectList post');
     let {username} = req.body
     let result = await getCollectList(username)
     if(result!==-1) {
@@ -261,6 +265,7 @@ router.post('/collectList', verifyToken, async(req,res,next)=> {
 })
 
 router.post('/historySearch', verifyToken, async(req,res,next)=> {
+    console.log('/user/historySearch post');
     let {username,key} = req.body
     let result = await getHistorySearchList(username,key)
     if(result == -1) {
@@ -277,6 +282,7 @@ router.post('/historySearch', verifyToken, async(req,res,next)=> {
 })
 
 router.post('/collectSearch', verifyToken, async(req,res,next)=> {
+    console.log('/user/collectSearch post');
     let {username,key} = req.body
     let result = await getCollectSearchList(username,key)
     if(result!==-1) {
@@ -293,6 +299,7 @@ router.post('/collectSearch', verifyToken, async(req,res,next)=> {
 })
 
 router.post('/removeHistory', verifyToken, async(req,res,next)=> {
+    console.log('/user/removeHistory post');
     let {username,list} = req.body
     let result = await removeHistoryList(username,list)
     if(result == -1){
@@ -309,6 +316,7 @@ router.post('/removeHistory', verifyToken, async(req,res,next)=> {
 })
 
 router.post('/removeCollect' , verifyToken, async(req,res,next)=> {
+    console.log('/user/removeCollect post');
     let { username,list } = req.body
     let result = await removeCollectList(username,list)
     if(result == -1) {
